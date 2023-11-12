@@ -11,19 +11,19 @@ yargs.command({
     command: 'add',
     describe: 'Add a new note',
     builder: {
-        body:{
+        body: {
             describe: 'Note body',
             demandOption: true,
             type: 'string'
         },
-       title: {
-        describe: 'Note title',
-        demandOption: true,
-        type: 'string'
-       }
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
     },
-    handler: function(argv){
-       notes.addNote(argv.title, argv.body)
+    handler(argv) {
+        notes.addNote(argv.title, argv.body)
     }
 })
 
@@ -38,10 +38,10 @@ yargs.command({
             type: 'string'
         }
     },
-    handler: function(argv){
-        console.log(argv)
+    handler: function (argv) {
+        console.log(argv.title)
         notes.removeNote(argv.title)
-        
+
     }
 })
 
@@ -49,8 +49,9 @@ yargs.command({
 yargs.command({
     command: 'list',
     describe: 'Listing notes',
-    handler: function(){
-        console.log('Listing notes')
+    handler() {
+        console.log(chalk.bgBlue("Your notes"))
+        notes.listNotes()
     }
 })
 
@@ -58,8 +59,15 @@ yargs.command({
 yargs.command({
     command: 'read',
     describe: 'Reading notes',
-    handler: function(){
-        console.log('Reading notes')
+    builder: {
+        title: {
+            describe: "Note title",
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler(argv){
+        notes.readNote(argv.title)
     }
 })
 

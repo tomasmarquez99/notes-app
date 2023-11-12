@@ -1,45 +1,65 @@
 const { default: chalk } = require('chalk')
+const { Console } = require('console')
 const fs = require('fs')
 function log(...args){
     console.log(...args)
 }
 
-const getNotes = function () {
-    return "Your notes..."
+
+const readNote = (title) => {
+    const notes = loadNotes()
+
+    const findNote = notes.find((note) => note.title === title);
+    
+    if(findNote)
+    {
+        log(chalk.inverse("Title: " + findNote.title + " " + "Body: " + findNote.body))
+    }else{
+        log(chalk.red("Note no found"))
+    }
 }
 
-const addNote = function (title, body) {
-    const notes = loadNotes()
-    const duplicatedNotes = notes.filter(function(note){
-        console.log(note)
-        return note.title === title
-       
-    })
 
-    if (duplicatedNotes.length === 0){
+const listNotes = () => {
+    const notes = loadNotes();
+
+    const consoleNotes = notes.forEach(note => 
+      console.log(note.title)
+    );
+  
+    if(notes.length > 0){
+      return consoleNotes
+    }
+}
+
+const getNotes = () => {
+  
+}
+
+const addNote = (title, body) => {
+    const notes = loadNotes()
+    const duplicatedNote = notes.find((note) => note.title === title)
+    
+    
+    if (!duplicatedNote){
         notes.push({
             title: title,
             body: body
         })
-        
         saveNotes(notes)
         console.log('New note added!')
     } else {
         console.log('Note title taken!')
     }
-
-    
-
 }
 
 const saveNotes = function(notes){
-
-    const dataJSON = JSON.stringify(notes)
+   const dataJSON = JSON.stringify(notes)
     fs.writeFileSync('notes.json', dataJSON)
 
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
     try {
         const dataBuffer = fs.readFileSync('notes.json')
         const dataJSON = dataBuffer.toString()
@@ -50,7 +70,7 @@ const loadNotes = function () {
     }
 }
 
-const removeNote = function(title){
+const removeNote = (title) => {
 
 const notes = loadNotes();
 const notesCount = notes.length;
@@ -72,5 +92,7 @@ if(newArrayCount !== notesCount)
 module.exports = {
     getNotes: getNotes,
     addNote: addNote,
-    removeNote: removeNote
+    removeNote: removeNote,
+    listNotes: listNotes,
+    readNote: readNote
 }
